@@ -44,7 +44,7 @@ export default function ParentDashboard() {
   const childInvoices = invoices.filter((i) => i.studentId === child?.id);
   const childGrades = grades.filter((g) => g.studentId === child?.id && g.approved);
   const childNotices = messages.filter(
-    (m) => m.recipient === "All Parents" || m.recipient === `Parent: ${currentUser.name}`
+    (m) => m.recipient === "All Parents" || m.recipient === "All Parents & Teachers" || m.recipient === `Parent: ${currentUser.name}`
   );
 
   // Flutterwave Mock Gateway state
