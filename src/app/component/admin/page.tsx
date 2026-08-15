@@ -1021,12 +1021,66 @@ export default function AdminPortal() {
 
         {/* VIEW 10: PTA MEETINGS */}
         {activeTab === "pta" && (
-          <div className="bg-white border border-[#e2e8f0] rounded-2xl p-6 shadow-sm animate-fadeIn">
-            <h3 className="text-sm font-bold text-[#0f172a] mb-2">PTA Meetings</h3>
-            <p className="text-xs text-[#64748b] mb-6">Schedule and manage parent-teacher association schedules</p>
-            <div className="flex flex-col items-center justify-center py-12 text-[#94a3b8] text-xs">
-              No meetings scheduled yet
+          <div className="animate-fadeIn">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h2 className="text-xl font-bold text-[#0f172a]">PTA Meetings</h2>
+                <p className="text-xs text-[#64748b] mt-0.5">Schedule and manage parent-teacher association schedules</p>
+              </div>
+              <button
+                onClick={() => setShowAddPta(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl cursor-pointer flex items-center gap-2 transition"
+              >
+                <Plus className="w-4 h-4" /> Schedule PTA Meeting
+              </button>
             </div>
+
+            {ptaMeetings.length === 0 ? (
+              <div className="bg-white border border-[#e2e8f0] rounded-2xl p-8 text-center text-[#94a3b8] text-xs">
+                No meetings scheduled yet
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {ptaMeetings.map((meeting) => (
+                  <div key={meeting.id} className="bg-white border border-[#e2e8f0] rounded-2xl p-6 shadow-sm flex flex-col justify-between">
+                    <div>
+                      <div className="flex justify-between items-start mb-4">
+                        <span
+                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
+                            meeting.type === "Video"
+                              ? "bg-blue-50 text-blue-600 border border-blue-200"
+                              : "bg-emerald-50 text-emerald-600 border border-emerald-200"
+                          }`}
+                        >
+                          {meeting.type} Meeting
+                        </span>
+                        <button
+                          onClick={() => removePtaMeeting(meeting.id)}
+                          className="text-red-400 hover:text-red-600 p-1.5 hover:bg-red-50 rounded-lg transition cursor-pointer"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+
+                      <h4 className="font-bold text-[#0f172a] text-sm mb-1">{meeting.title}</h4>
+                      <p className="text-[10px] text-[#94a3b8] mb-3">
+                        📅 {new Date(meeting.dateTime).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}
+                      </p>
+                      <p className="text-xs text-[#64748b] leading-relaxed mb-6">{meeting.description}</p>
+                    </div>
+
+                    <button
+                      onClick={() => setActiveMeeting(meeting)}
+                      className={`w-full py-2.5 rounded-xl text-xs font-bold text-white transition cursor-pointer text-center ${
+                        meeting.type === "Video" ? "bg-blue-600 hover:bg-blue-700" : "bg-emerald-600 hover:bg-emerald-700"
+                      }`}
+                    >
+                      Join {meeting.type === "Video" ? "Video call" : "Voice only"}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
