@@ -175,6 +175,15 @@ const initialPtaMeetings: PtaMeeting[] = [
   }
 ];
 
+const initialAnnouncements: Announcement[] = [
+  {
+    id: "ANN-101",
+    title: "Resumption Guidelines for Term 1",
+    content: "All students are expected to resume on September 10th. Make sure school fees invoices are settled.",
+    date: "2026-08-15"
+  }
+];
+
 export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [school, setSchool] = useState<School | null>(null);
   const [students, setStudents] = useState<Student[]>([]);
