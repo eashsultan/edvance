@@ -98,6 +98,13 @@ export interface PtaMeeting {
   meetingUrl: string;
 }
 
+export interface Announcement {
+  id: string;
+  title: string;
+  content: string;
+  date: string;
+}
+
 interface StateContextType {
   school: School | null;
   updateSchool: (school: School) => void;
@@ -126,6 +133,9 @@ interface StateContextType {
   ptaMeetings: PtaMeeting[];
   addPtaMeeting: (meeting: Omit<PtaMeeting, "id" | "meetingUrl">) => void;
   removePtaMeeting: (id: string) => void;
+  announcements: Announcement[];
+  addAnnouncement: (ann: Omit<Announcement, "id" | "date">) => void;
+  removeAnnouncement: (id: string) => void;
   currentUser: { role: "admin" | "teacher" | "parent" | null; email: string | null; name: string | null };
   setCurrentUser: (user: { role: "admin" | "teacher" | "parent" | null; email: string | null; name: string | null }) => void;
   authLoading: boolean;
