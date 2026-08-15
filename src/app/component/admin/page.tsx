@@ -238,6 +238,15 @@ export default function AdminPortal() {
       t.subject.toLowerCase().includes(teacherSearch.toLowerCase())
   );
 
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-[#f8fafc] flex flex-col items-center justify-center text-slate-500 text-xs">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600 mb-2" />
+        Initializing session...
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-screen bg-[#f8fafc] text-[#334155] font-sans">
       {/* SIDEBAR */}
