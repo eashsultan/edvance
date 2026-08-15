@@ -128,6 +128,7 @@ interface StateContextType {
   removePtaMeeting: (id: string) => void;
   currentUser: { role: "admin" | "teacher" | "parent" | null; email: string | null; name: string | null };
   setCurrentUser: (user: { role: "admin" | "teacher" | "parent" | null; email: string | null; name: string | null }) => void;
+  authLoading: boolean;
   logout: () => void;
 }
 
