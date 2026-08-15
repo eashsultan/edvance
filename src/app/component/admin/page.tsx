@@ -213,6 +213,17 @@ export default function AdminPortal() {
     setShowAddPta(false);
   };
 
+  const handleCreateAnnouncement = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newAnnouncement.title || !newAnnouncement.content) return;
+    addAnnouncement({
+      title: newAnnouncement.title,
+      content: newAnnouncement.content,
+    });
+    setNewAnnouncement({ title: "", content: "" });
+    setShowAddAnnouncement(false);
+  };
+
   const handleSaveSettings = (e: React.FormEvent) => {
     e.preventDefault();
     if (school) {
