@@ -1710,6 +1710,51 @@ export default function AdminPortal() {
           </div>
         </div>
       )}
+
+      {/* 7. Post Announcement Modal */}
+      {showAddAnnouncement && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="bg-white rounded-3xl w-full max-w-md p-6 relative text-xs text-[#334155]">
+            <h3 className="font-bold text-sm text-[#0f172a] mb-4">Post School Announcement</h3>
+            <form onSubmit={handleCreateAnnouncement} className="flex flex-col gap-3">
+              <div>
+                <label className="text-[#64748b] block mb-1 font-bold">Announcement Title</label>
+                <input
+                  type="text"
+                  required
+                  value={newAnnouncement.title}
+                  onChange={(e) => setNewAnnouncement({ ...newAnnouncement, title: e.target.value })}
+                  placeholder="e.g. End of Term Resumption Dates"
+                  className="w-full bg-white border border-[#e2e8f0] rounded-xl p-2.5 text-[#334155] focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="text-[#64748b] block mb-1 font-bold">Content</label>
+                <textarea
+                  rows={4}
+                  required
+                  value={newAnnouncement.content}
+                  onChange={(e) => setNewAnnouncement({ ...newAnnouncement, content: e.target.value })}
+                  placeholder="Details of the announcement broadcasted to all parents and teachers..."
+                  className="w-full bg-white border border-[#e2e8f0] rounded-xl p-2.5 text-[#334155] focus:outline-none"
+                />
+              </div>
+              <div className="flex gap-2 justify-end mt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowAddAnnouncement(false)}
+                  className="bg-white border border-[#cbd5e1] text-[#334155] font-bold px-4 py-2 rounded-xl cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-xl cursor-pointer">
+                  Post Announcement
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
