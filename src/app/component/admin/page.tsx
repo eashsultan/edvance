@@ -59,6 +59,7 @@ export default function AdminPortal() {
     addPtaMeeting,
     removePtaMeeting,
     currentUser,
+    authLoading,
     logout,
   } = useAppState();
 
@@ -80,10 +81,10 @@ export default function AdminPortal() {
 
   // Auth Check
   useEffect(() => {
-    if (!currentUser.role || currentUser.role !== "admin") {
+    if (!authLoading && (!currentUser.role || currentUser.role !== "admin")) {
       router.push("/component/auth/admin");
     }
-  }, [currentUser, router]);
+  }, [currentUser, authLoading, router]);
 
   // Search/Filters state
   const [studentSearch, setStudentSearch] = useState("");
