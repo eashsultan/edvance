@@ -471,12 +471,53 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const updated = [...ptaMeetings, newMeeting];
     setPtaMeetings(updated);
     localStorage.setItem("edvance_meetings", JSON.stringify(updated));
+
+    // Send broadcast notification to all parents & teachers
+    const newMsg: Message = {
+      id: "M" + Math.floor(Math.random() * 900 + 100),
+      sender: "Admin Notice",
+      recipient: "All Parents & Teachers",
+      text: `📅 NEW PTA MEETING: "${newMeeting.title}" has been scheduled for ${new Date(newMeeting.dateTime).toLocaleString()}. Join link: ${newMeeting.meetingUrl}`,
+      timestamp: new Date().toISOString().replace("T", " ").slice(0, 16),
+    };
+    const updatedMsgs = [...messages, newMsg];
+    setMessages(updatedMsgs);
+    localStorage.setItem("edvance_messages", JSON.stringify(updatedMsgs));
   };
 
   const removePtaMeeting = (id: string) => {
     const updated = ptaMeetings.filter((m) => m.id !== id);
     setPtaMeetings(updated);
     localStorage.setItem("edvance_meetings", JSON.stringify(updated));
+  };
+
+  const addAnnouncement = (annData: Omit<Announcement, "id" | "date">) => {
+    const newAnn: Announcement = {
+      ...annData,
+      id: "ANN-" + Math.floor(Math.random() * 900 + 100),
+      date: new Date().toISOString().split("T")[0],
+    };
+    const updated = [...announcements, newAnn];
+    setAnnouncements(updated);
+    localStorage.setItem("edvance_announcements", JSON.stringify(updated));
+
+    // Send broadcast notification to all parents & teachers
+    const newMsg: Message = {
+      id: "M" + Math.floor(Math.random() * 900 + 100),
+      sender: "Admin Notice",
+      recipient: "All Parents & Teachers",
+      text: `📢 ANNOUNCEMENT: "${newAnn.title}" - ${newAnn.content}`,
+      timestamp: new Date().toISOString().replace("T", " ").slice(0, 16),
+    };
+    const updatedMsgs = [...messages, newMsg];
+    setMessages(updatedMsgs);
+    localStorage.setItem("edvance_messages", JSON.stringify(updatedMsgs));
+  };
+
+  const removeAnnouncement = (id: string) => {
+    const updated = announcements.filter((a) => a.id !== id);
+    setAnnouncements(updated);
+    localStorage.setItem("edvance_announcements", JSON.stringify(updated));
   };
 
   const updateCurrentUser = (user: { role: "admin" | "teacher" | "parent" | null; email: string | null; name: string | null }) => {
