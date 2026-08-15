@@ -58,6 +58,9 @@ export default function AdminPortal() {
     ptaMeetings,
     addPtaMeeting,
     removePtaMeeting,
+    announcements,
+    addAnnouncement,
+    removeAnnouncement,
     currentUser,
     authLoading,
     logout,
@@ -101,6 +104,7 @@ export default function AdminPortal() {
   const [showAddClass, setShowAddClass] = useState(false);
   const [showAddSubject, setShowAddSubject] = useState(false);
   const [showAddPta, setShowAddPta] = useState(false);
+  const [showAddAnnouncement, setShowAddAnnouncement] = useState(false);
   const [activeMeeting, setActiveMeeting] = useState<any>(null);
 
   // New item Form States
@@ -109,6 +113,7 @@ export default function AdminPortal() {
   const [newClassName, setNewClassName] = useState("");
   const [newSub, setNewSub] = useState({ name: "", className: "Ss3", caMax: 40, examMax: 60 });
   const [newPta, setNewPta] = useState({ title: "", dateTime: "", type: "Video" as "Video" | "Audio", description: "" });
+  const [newAnnouncement, setNewAnnouncement] = useState({ title: "", content: "" });
 
   // Settings form states
   const [settingsForm, setSettingsForm] = useState({
