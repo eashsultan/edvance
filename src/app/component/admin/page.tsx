@@ -107,7 +107,7 @@ export default function AdminPortal() {
   const [newTeacher, setNewTeacher] = useState({ name: "", email: "", subject: "", class: "Ss3", salary: 20000, bank: "Page MFBank", accountNo: "" });
   const [newClassName, setNewClassName] = useState("");
   const [newSub, setNewSub] = useState({ name: "", className: "Ss3", caMax: 40, examMax: 60 });
-  const [newPta, setNewPta] = useState({ title: "", dateTime: "", type: "Video" as "Video" | "Voice", description: "" });
+  const [newPta, setNewPta] = useState({ title: "", dateTime: "", type: "Video" as "Video" | "Audio", description: "" });
 
   // Settings form states
   const [settingsForm, setSettingsForm] = useState({
@@ -1075,7 +1075,7 @@ export default function AdminPortal() {
                         meeting.type === "Video" ? "bg-blue-600 hover:bg-blue-700" : "bg-emerald-600 hover:bg-emerald-700"
                       }`}
                     >
-                      Join {meeting.type === "Video" ? "Video call" : "Voice only"}
+                      Join {meeting.type === "Video" ? "Video call" : "Audio call"}
                     </button>
                   </div>
                 ))}
@@ -1582,7 +1582,7 @@ export default function AdminPortal() {
                   className="w-full bg-white border border-[#e2e8f0] rounded-xl p-2.5 text-[#334155] focus:outline-none font-semibold"
                 >
                   <option value="Video">Video Call (Google Meet / Jitsi Style)</option>
-                  <option value="Voice">Voice Call Only</option>
+                  <option value="Audio">Audio Call Only</option>
                 </select>
               </div>
               <div>
@@ -1629,7 +1629,7 @@ export default function AdminPortal() {
             <div>
               <h3 className="font-bold text-sm">{activeMeeting.title}</h3>
               <p className="text-[10px] text-white/50">
-                Live {activeMeeting.type === "Video" ? "Video Conference" : "Voice Call Only"}
+                Live {activeMeeting.type === "Video" ? "Video Conference" : "Audio Call Only"}
               </p>
             </div>
             <button
@@ -1643,7 +1643,7 @@ export default function AdminPortal() {
           <div className="flex-1 bg-[#1e293b] relative">
             <iframe
               src={`${activeMeeting.meetingUrl}${
-                activeMeeting.type === "Voice" ? "#config.startWithVideoMuted=true" : ""
+                activeMeeting.type === "Audio" ? "#config.startWithVideoMuted=true" : ""
               }`}
               allow="camera; microphone; display-capture; autoplay"
               className="absolute inset-0 w-full h-full border-none"
