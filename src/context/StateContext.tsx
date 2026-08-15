@@ -10,6 +10,9 @@ export interface School {
   address: string;
   adminName: string;
   adminEmail: string;
+  bankName?: string;
+  accountNumber?: string;
+  accountName?: string;
 }
 
 export interface Student {
@@ -22,6 +25,7 @@ export interface Student {
   attendanceRate: number; // e.g. 92
   feesPaid: number;
   feesTotal: number;
+  familyCode: string;
 }
 
 export interface Teacher {
@@ -29,7 +33,24 @@ export interface Teacher {
   name: string;
   email: string;
   subject: string;
-  class: string;
+  class: string; // Assigned class
+  salary: number;
+  bank: string;
+  accountNo: string;
+  status: "Paid" | "Unpaid";
+}
+
+export interface ClassItem {
+  id: string;
+  name: string;
+}
+
+export interface SubjectItem {
+  id: string;
+  name: string;
+  className: string;
+  caMax: number;
+  examMax: number;
 }
 
 export interface FeeInvoice {
@@ -42,6 +63,8 @@ export interface FeeInvoice {
   dueDate: string;
   paidDate?: string;
   reference?: string;
+  term?: string;
+  session?: string;
 }
 
 export interface Grade {
@@ -68,11 +91,21 @@ export interface Message {
 
 interface StateContextType {
   school: School | null;
+  updateSchool: (school: School) => void;
   registerSchool: (school: Omit<School, "id">) => void;
   students: Student[];
   addStudent: (student: Omit<Student, "id" | "attendanceRate" | "feesPaid" | "feesTotal">) => void;
+  removeStudent: (id: string) => void;
   teachers: Teacher[];
-  addTeacher: (teacher: Omit<Teacher, "id">) => void;
+  addTeacher: (teacher: Omit<Teacher, "id" | "status">) => void;
+  removeTeacher: (id: string) => void;
+  payTeacherSalary: (id: string) => void;
+  classes: ClassItem[];
+  addClass: (className: string) => void;
+  removeClass: (id: string) => void;
+  subjects: SubjectItem[];
+  addSubject: (sub: Omit<SubjectItem, "id">) => void;
+  removeSubject: (id: string) => void;
   invoices: FeeInvoice[];
   addInvoice: (invoice: Omit<FeeInvoice, "id" | "status">) => void;
   payInvoice: (invoiceId: string, reference: string) => void;
@@ -88,38 +121,32 @@ interface StateContextType {
 
 const StateContext = createContext<StateContextType | undefined>(undefined);
 
+const initialClasses: ClassItem[] = [
+  { id: "C001", name: "Ss3" }
+];
+
+const initialSubjects: SubjectItem[] = [
+  { id: "SUB001", name: "English", className: "Ss3", caMax: 40, examMax: 60 }
+];
+
 const initialStudents: Student[] = [
-  { id: "S001", name: "Chinedu Okafor", rollNumber: "EDV/2026/012", class: "JSS 1", parentEmail: "parent@school.com", parentName: "Adebayo Okafor", attendanceRate: 95, feesPaid: 150000, feesTotal: 150000 },
-  { id: "S002", name: "Amina Bello", rollNumber: "EDV/2026/034", class: "JSS 2", parentEmail: "amina.parent@school.com", parentName: "Ibrahim Bello", attendanceRate: 88, feesPaid: 75000, feesTotal: 150000 },
-  { id: "S003", name: "Oluwaseun Adebayo", rollNumber: "EDV/2026/056", class: "SSS 1", parentEmail: "seun.parent@school.com", parentName: "Samuel Adebayo", attendanceRate: 91, feesPaid: 0, feesTotal: 180000 },
+  { id: "S001", name: "Chinedu Okafor", rollNumber: "EDV/2026/012", class: "Ss3", parentEmail: "parent@school.com", parentName: "Adebayo Okafor", attendanceRate: 95, feesPaid: 150000, feesTotal: 150000, familyCode: "FAM-902" },
 ];
 
 const initialTeachers: Teacher[] = [
-  { id: "T001", name: "Mrs. Ngozi Ezenwa", email: "teacher@school.com", subject: "Mathematics", class: "JSS 1" },
-  { id: "T002", name: "Mr. Babajide Sowande", email: "sowande@school.com", subject: "English Language", class: "JSS 2" },
-  { id: "T003", name: "Dr. Chioma Nwachukwu", email: "nwachukwu@school.com", subject: "Basic Science", class: "SSS 1" },
+  { id: "T001", name: "Ishaq", email: "teacher@school.com", subject: "English", class: "Ss3", salary: 20000, bank: "Page MFBank", accountNo: "222222222222222", status: "Unpaid" },
 ];
 
 const initialInvoices: FeeInvoice[] = [
-  { id: "INV-001", studentId: "S001", studentName: "Chinedu Okafor", amount: 150000, type: "1st Term Tuition", status: "Paid", dueDate: "2026-09-10", paidDate: "2026-09-02", reference: "FLW-MOCK-12345" },
-  { id: "INV-002", studentId: "S002", studentName: "Amina Bello", amount: 150000, type: "1st Term Tuition", status: "Unpaid", dueDate: "2026-09-10" },
-  { id: "INV-003", studentId: "S003", studentName: "Oluwaseun Adebayo", amount: 180000, type: "1st Term Tuition", status: "Unpaid", dueDate: "2026-09-15" },
-];
-
-const initialGrades: Grade[] = [
-  { id: "G001", studentId: "S001", studentName: "Chinedu Okafor", subject: "Mathematics", class: "JSS 1", caScore: 28, examScore: 55, total: 83, grade: "A", term: "First Term", approved: true },
-  { id: "G002", studentId: "S002", studentName: "Amina Bello", subject: "English Language", class: "JSS 2", caScore: 24, examScore: 42, total: 66, grade: "B", term: "First Term", approved: false },
-];
-
-const initialMessages: Message[] = [
-  { id: "M001", sender: "Admin", recipient: "All Parents", text: "Welcome to the new academic term. Please ensure school fees are cleared on or before September 15th.", timestamp: "2026-08-15 10:00" },
-  { id: "M002", sender: "Mrs. Ngozi Ezenwa", recipient: "Parent: Adebayo Okafor", text: "Chinedu has done exceptionally well in the Mathematics assessment tests this week.", timestamp: "2026-08-15 14:20" },
+  { id: "INV-001", studentId: "S001", studentName: "Chinedu Okafor", amount: 150000, type: "1st Term Tuition", status: "Paid", dueDate: "2026-09-10", paidDate: "2026-09-02", reference: "FLW-MOCK-12345", term: "First Term", session: "2024/2025" },
 ];
 
 export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [school, setSchool] = useState<School | null>(null);
   const [students, setStudents] = useState<Student[]>([]);
   const [teachers, setTeachers] = useState<Teacher[]>([]);
+  const [classes, setClasses] = useState<ClassItem[]>([]);
+  const [subjects, setSubjects] = useState<SubjectItem[]>([]);
   const [invoices, setInvoices] = useState<FeeInvoice[]>([]);
   const [grades, setGrades] = useState<Grade[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -130,7 +157,7 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const localSchool = localStorage.getItem("edvance_school");
     if (localSchool) setSchool(JSON.parse(localSchool));
     else {
-      const defaultSchool = { id: "SCH-993", name: "Greenfield Academy", phone: "+2348012345678", address: "12, Herbert Macaulay Way, Yaba, Lagos", adminName: "Principal Davies", adminEmail: "admin@school.com" };
+      const defaultSchool = { id: "IRA85BAG", name: "Alpha", phone: "09075444148", address: "Gombe", adminName: "Ishaq", adminEmail: "ishaqsultan7541@gmail.com", bankName: "", accountNumber: "", accountName: "" };
       setSchool(defaultSchool);
       localStorage.setItem("edvance_school", JSON.stringify(defaultSchool));
     }
@@ -149,6 +176,20 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       localStorage.setItem("edvance_teachers", JSON.stringify(initialTeachers));
     }
 
+    const localClasses = localStorage.getItem("edvance_classes");
+    if (localClasses) setClasses(JSON.parse(localClasses));
+    else {
+      setClasses(initialClasses);
+      localStorage.setItem("edvance_classes", JSON.stringify(initialClasses));
+    }
+
+    const localSubjects = localStorage.getItem("edvance_subjects");
+    if (localSubjects) setSubjects(JSON.parse(localSubjects));
+    else {
+      setSubjects(initialSubjects);
+      localStorage.setItem("edvance_subjects", JSON.stringify(initialSubjects));
+    }
+
     const localInvoices = localStorage.getItem("edvance_invoices");
     if (localInvoices) setInvoices(JSON.parse(localInvoices));
     else {
@@ -159,6 +200,7 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const localGrades = localStorage.getItem("edvance_grades");
     if (localGrades) setGrades(JSON.parse(localGrades));
     else {
+      const initialGrades: Grade[] = [];
       setGrades(initialGrades);
       localStorage.setItem("edvance_grades", JSON.stringify(initialGrades));
     }
@@ -166,6 +208,7 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const localMessages = localStorage.getItem("edvance_messages");
     if (localMessages) setMessages(JSON.parse(localMessages));
     else {
+      const initialMessages: Message[] = [];
       setMessages(initialMessages);
       localStorage.setItem("edvance_messages", JSON.stringify(initialMessages));
     }
@@ -173,6 +216,11 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const localUser = localStorage.getItem("edvance_current_user");
     if (localUser) setCurrentUser(JSON.parse(localUser));
   }, []);
+
+  const updateSchool = (updatedSchool: School) => {
+    setSchool(updatedSchool);
+    localStorage.setItem("edvance_school", JSON.stringify(updatedSchool));
+  };
 
   const registerSchool = (newSchool: Omit<School, "id">) => {
     const created: School = { ...newSchool, id: "SCH-" + Math.floor(Math.random() * 900 + 100) };
@@ -203,20 +251,78 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       type: "1st Term Tuition",
       status: "Unpaid",
       dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+      term: "First Term",
+      session: "2024/2025"
     };
     const updatedInvoices = [...invoices, newInv];
     setInvoices(updatedInvoices);
     localStorage.setItem("edvance_invoices", JSON.stringify(updatedInvoices));
   };
 
-  const addTeacher = (teacherData: Omit<Teacher, "id">) => {
+  const removeStudent = (id: string) => {
+    const updated = students.filter((s) => s.id !== id);
+    setStudents(updated);
+    localStorage.setItem("edvance_students", JSON.stringify(updated));
+  };
+
+  const addTeacher = (teacherData: Omit<Teacher, "id" | "status">) => {
     const newTeacher: Teacher = {
       ...teacherData,
       id: "T" + Math.floor(Math.random() * 900 + 100),
+      status: "Unpaid",
     };
     const updated = [...teachers, newTeacher];
     setTeachers(updated);
     localStorage.setItem("edvance_teachers", JSON.stringify(updated));
+  };
+
+  const removeTeacher = (id: string) => {
+    const updated = teachers.filter((t) => t.id !== id);
+    setTeachers(updated);
+    localStorage.setItem("edvance_teachers", JSON.stringify(updated));
+  };
+
+  const payTeacherSalary = (id: string) => {
+    const updated = teachers.map((t) => {
+      if (t.id === id) {
+        return { ...t, status: "Paid" as const };
+      }
+      return t;
+    });
+    setTeachers(updated);
+    localStorage.setItem("edvance_teachers", JSON.stringify(updated));
+  };
+
+  const addClass = (className: string) => {
+    const newClass: ClassItem = {
+      id: "C" + Math.floor(Math.random() * 900 + 100),
+      name: className,
+    };
+    const updated = [...classes, newClass];
+    setClasses(updated);
+    localStorage.setItem("edvance_classes", JSON.stringify(updated));
+  };
+
+  const removeClass = (id: string) => {
+    const updated = classes.filter((c) => c.id !== id);
+    setClasses(updated);
+    localStorage.setItem("edvance_classes", JSON.stringify(updated));
+  };
+
+  const addSubject = (subData: Omit<SubjectItem, "id">) => {
+    const newSub: SubjectItem = {
+      ...subData,
+      id: "SUB" + Math.floor(Math.random() * 900 + 100),
+    };
+    const updated = [...subjects, newSub];
+    setSubjects(updated);
+    localStorage.setItem("edvance_subjects", JSON.stringify(updated));
+  };
+
+  const removeSubject = (id: string) => {
+    const updated = subjects.filter((s) => s.id !== id);
+    setSubjects(updated);
+    localStorage.setItem("edvance_subjects", JSON.stringify(updated));
   };
 
   const addInvoice = (invData: Omit<FeeInvoice, "id" | "status">) => {
@@ -312,11 +418,21 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     <StateContext.Provider
       value={{
         school,
+        updateSchool,
         registerSchool,
         students,
         addStudent,
+        removeStudent,
         teachers,
         addTeacher,
+        removeTeacher,
+        payTeacherSalary,
+        classes,
+        addClass,
+        removeClass,
+        subjects,
+        addSubject,
+        removeSubject,
         invoices,
         addInvoice,
         payInvoice,
