@@ -93,7 +93,7 @@ export interface PtaMeeting {
   id: string;
   title: string;
   dateTime: string;
-  type: "Video" | "Voice";
+  type: "Video" | "Audio";
   description: string;
   meetingUrl: string;
 }
