@@ -194,6 +194,19 @@ export default function AdminPortal() {
     setShowAddSubject(false);
   };
 
+  const handleCreatePta = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newPta.title || !newPta.dateTime) return;
+    addPtaMeeting({
+      title: newPta.title,
+      dateTime: newPta.dateTime,
+      type: newPta.type,
+      description: newPta.description,
+    });
+    setNewPta({ title: "", dateTime: "", type: "Video", description: "" });
+    setShowAddPta(false);
+  };
+
   const handleSaveSettings = (e: React.FormEvent) => {
     e.preventDefault();
     if (school) {
