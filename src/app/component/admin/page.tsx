@@ -55,6 +55,9 @@ export default function AdminPortal() {
     approveGrade,
     messages,
     sendMessage,
+    ptaMeetings,
+    addPtaMeeting,
+    removePtaMeeting,
     currentUser,
     logout,
   } = useAppState();
@@ -96,12 +99,15 @@ export default function AdminPortal() {
   const [showAddTeacher, setShowAddTeacher] = useState(false);
   const [showAddClass, setShowAddClass] = useState(false);
   const [showAddSubject, setShowAddSubject] = useState(false);
+  const [showAddPta, setShowAddPta] = useState(false);
+  const [activeMeeting, setActiveMeeting] = useState<any>(null);
 
   // New item Form States
   const [newStudent, setNewStudent] = useState({ name: "", rollNumber: "", class: "Ss3", parentName: "", parentEmail: "", familyCode: "" });
   const [newTeacher, setNewTeacher] = useState({ name: "", email: "", subject: "", class: "Ss3", salary: 20000, bank: "Page MFBank", accountNo: "" });
   const [newClassName, setNewClassName] = useState("");
   const [newSub, setNewSub] = useState({ name: "", className: "Ss3", caMax: 40, examMax: 60 });
+  const [newPta, setNewPta] = useState({ title: "", dateTime: "", type: "Video" as "Video" | "Voice", description: "" });
 
   // Settings form states
   const [settingsForm, setSettingsForm] = useState({
