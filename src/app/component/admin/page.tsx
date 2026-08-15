@@ -1112,12 +1112,45 @@ export default function AdminPortal() {
 
         {/* VIEW 11: ANNOUNCEMENTS */}
         {activeTab === "announcements" && (
-          <div className="bg-white border border-[#e2e8f0] rounded-2xl p-6 shadow-sm animate-fadeIn">
-            <h3 className="text-sm font-bold text-[#0f172a] mb-2">School Announcements</h3>
-            <p className="text-xs text-[#64748b] mb-6">Broadcast news or newsletters to parents</p>
-            <div className="flex flex-col items-center justify-center py-12 text-[#94a3b8] text-xs">
-              No announcements posted yet
+          <div className="animate-fadeIn">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h2 className="text-xl font-bold text-[#0f172a]">School Announcements</h2>
+                <p className="text-xs text-[#64748b] mt-0.5">Broadcast school updates, notices, or newsletters</p>
+              </div>
+              <button
+                onClick={() => setShowAddAnnouncement(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl cursor-pointer flex items-center gap-2 transition"
+              >
+                <Plus className="w-4 h-4" /> Post Announcement
+              </button>
             </div>
+
+            {announcements.length === 0 ? (
+              <div className="bg-white border border-[#e2e8f0] rounded-2xl p-8 text-center text-[#94a3b8] text-xs">
+                No announcements posted yet
+              </div>
+            ) : (
+              <div className="flex flex-col gap-4">
+                {announcements.map((ann) => (
+                  <div key={ann.id} className="bg-white border border-[#e2e8f0] rounded-2xl p-5 shadow-sm">
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <h4 className="font-bold text-[#0f172a] text-sm">{ann.title}</h4>
+                        <span className="text-[10px] text-[#94a3b8]">📅 Date Posted: {ann.date}</span>
+                      </div>
+                      <button
+                        onClick={() => removeAnnouncement(ann.id)}
+                        className="text-red-400 hover:text-red-600 p-1.5 hover:bg-red-50 rounded-lg transition cursor-pointer"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                    <p className="text-xs text-[#64748b] leading-relaxed mt-2 whitespace-pre-wrap">{ann.content}</p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
