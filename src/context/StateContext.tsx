@@ -248,6 +248,7 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
     const localUser = localStorage.getItem("edvance_current_user");
     if (localUser) setCurrentUser(JSON.parse(localUser));
+    setAuthLoading(false);
   }, []);
 
   const updateSchool = (updatedSchool: School) => {
