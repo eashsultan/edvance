@@ -525,7 +525,7 @@ export default function AdminPortal() {
                             <p className="text-[10px] text-[#94a3b8]">{t.email}</p>
                           </td>
                           <td className="py-4 px-6 font-bold">{t.subject}</td>
-                          <td className="py-4 px-6 font-semibold">₦{t.salary.toLocaleString()}</td>
+                          <td className="py-4 px-6 font-semibold">₦{(t.salary || 0).toLocaleString()}</td>
                           <td className="py-4 px-6">{t.bank}</td>
                           <td className="py-4 px-6 font-mono text-[#64748b]">{t.accountNo}</td>
                           <td className="py-4 px-6">
@@ -964,7 +964,7 @@ export default function AdminPortal() {
                         <td className="py-4 px-6 font-semibold">{t.subject}</td>
                         <td className="py-4 px-6">{t.bank}</td>
                         <td className="py-4 px-6 font-mono text-[#64748b]">{t.accountNo}</td>
-                        <td className="py-4 px-6 font-bold text-[#0f172a]">₦{t.salary.toLocaleString()}</td>
+                        <td className="py-4 px-6 font-bold text-[#0f172a]">₦{(t.salary || 0).toLocaleString()}</td>
                         <td className="py-4 px-6">
                           <span
                             className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
@@ -981,7 +981,7 @@ export default function AdminPortal() {
                             <button
                               onClick={() => {
                                 payTeacherSalary(t.id);
-                                alert(`Paid ₦${t.salary.toLocaleString()} to ${t.name} via Flutterwave Mock.`);
+                                alert(`Paid ₦${(t.salary || 0).toLocaleString()} to ${t.name} via Flutterwave Mock.`);
                               }}
                               className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-3 py-1.5 rounded-lg cursor-pointer transition flex items-center gap-1.5 ml-auto text-[10px]"
                             >
