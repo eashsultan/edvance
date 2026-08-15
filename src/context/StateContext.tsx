@@ -89,6 +89,15 @@ export interface Message {
   timestamp: string;
 }
 
+export interface PtaMeeting {
+  id: string;
+  title: string;
+  dateTime: string;
+  type: "Video" | "Voice";
+  description: string;
+  meetingUrl: string;
+}
+
 interface StateContextType {
   school: School | null;
   updateSchool: (school: School) => void;
@@ -114,6 +123,9 @@ interface StateContextType {
   approveGrade: (gradeId: string) => void;
   messages: Message[];
   sendMessage: (msg: Omit<Message, "id" | "timestamp">) => void;
+  ptaMeetings: PtaMeeting[];
+  addPtaMeeting: (meeting: Omit<PtaMeeting, "id" | "meetingUrl">) => void;
+  removePtaMeeting: (id: string) => void;
   currentUser: { role: "admin" | "teacher" | "parent" | null; email: string | null; name: string | null };
   setCurrentUser: (user: { role: "admin" | "teacher" | "parent" | null; email: string | null; name: string | null }) => void;
   logout: () => void;
@@ -141,6 +153,17 @@ const initialInvoices: FeeInvoice[] = [
   { id: "INV-001", studentId: "S001", studentName: "Chinedu Okafor", amount: 150000, type: "1st Term Tuition", status: "Paid", dueDate: "2026-09-10", paidDate: "2026-09-02", reference: "FLW-MOCK-12345", term: "First Term", session: "2024/2025" },
 ];
 
+const initialPtaMeetings: PtaMeeting[] = [
+  {
+    id: "PTA-101",
+    title: "First Term Executive PTA Meeting",
+    dateTime: "2026-08-20T10:00",
+    type: "Video",
+    description: "Discussion on school fees guidelines and terminal grading updates.",
+    meetingUrl: "https://meet.jit.si/EdvancePTA-FirstTermExecutiveMeeting"
+  }
+];
+
 export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [school, setSchool] = useState<School | null>(null);
   const [students, setStudents] = useState<Student[]>([]);
@@ -150,6 +173,7 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [invoices, setInvoices] = useState<FeeInvoice[]>([]);
   const [grades, setGrades] = useState<Grade[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [ptaMeetings, setPtaMeetings] = useState<PtaMeeting[]>([]);
   const [currentUser, setCurrentUser] = useState<{ role: "admin" | "teacher" | "parent" | null; email: string | null; name: string | null }>({ role: null, email: null, name: null });
 
   // Load from local storage
@@ -211,6 +235,13 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const initialMessages: Message[] = [];
       setMessages(initialMessages);
       localStorage.setItem("edvance_messages", JSON.stringify(initialMessages));
+    }
+
+    const localMeetings = localStorage.getItem("edvance_meetings");
+    if (localMeetings) setPtaMeetings(JSON.parse(localMeetings));
+    else {
+      setPtaMeetings(initialPtaMeetings);
+      localStorage.setItem("edvance_meetings", JSON.stringify(initialPtaMeetings));
     }
 
     const localUser = localStorage.getItem("edvance_current_user");
@@ -400,6 +431,24 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     localStorage.setItem("edvance_messages", JSON.stringify(updated));
   };
 
+  const addPtaMeeting = (meetingData: Omit<PtaMeeting, "id" | "meetingUrl">) => {
+    const slug = meetingData.title.replace(/\s+/g, "");
+    const newMeeting: PtaMeeting = {
+      ...meetingData,
+      id: "PTA-" + Math.floor(Math.random() * 900 + 100),
+      meetingUrl: `https://meet.jit.si/EdvancePTA-${slug}-${Math.floor(Math.random() * 900 + 100)}`
+    };
+    const updated = [...ptaMeetings, newMeeting];
+    setPtaMeetings(updated);
+    localStorage.setItem("edvance_meetings", JSON.stringify(updated));
+  };
+
+  const removePtaMeeting = (id: string) => {
+    const updated = ptaMeetings.filter((m) => m.id !== id);
+    setPtaMeetings(updated);
+    localStorage.setItem("edvance_meetings", JSON.stringify(updated));
+  };
+
   const updateCurrentUser = (user: { role: "admin" | "teacher" | "parent" | null; email: string | null; name: string | null }) => {
     setCurrentUser(user);
     if (user.role) {
@@ -441,6 +490,9 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         approveGrade,
         messages,
         sendMessage,
+        ptaMeetings,
+        addPtaMeeting,
+        removePtaMeeting,
         currentUser,
         setCurrentUser: updateCurrentUser,
         logout,
