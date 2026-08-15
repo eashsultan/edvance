@@ -266,6 +266,13 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       localStorage.setItem("edvance_meetings", JSON.stringify(initialPtaMeetings));
     }
 
+    const localAnnouncements = localStorage.getItem("edvance_announcements");
+    if (localAnnouncements) setAnnouncements(JSON.parse(localAnnouncements));
+    else {
+      setAnnouncements(initialAnnouncements);
+      localStorage.setItem("edvance_announcements", JSON.stringify(initialAnnouncements));
+    }
+
     const localUser = localStorage.getItem("edvance_current_user");
     if (localUser) setCurrentUser(JSON.parse(localUser));
     setAuthLoading(false);
