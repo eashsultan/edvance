@@ -498,6 +498,7 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         removePtaMeeting,
         currentUser,
         setCurrentUser: updateCurrentUser,
+        authLoading,
         logout,
       }}
     >
