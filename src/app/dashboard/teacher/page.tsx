@@ -359,7 +359,7 @@ export default function TeacherDashboard() {
               <h3 className="font-bold text-base mb-4 font-serif">Message Logs</h3>
               <div className="flex flex-col gap-4 max-h-[500px] overflow-y-auto pr-1">
                 {messages
-                  .filter((m) => m.sender.includes("Ngozi") || m.recipient.includes("Mrs. Ngozi"))
+                  .filter((m) => m.sender.includes("Ngozi") || m.recipient.includes("Mrs. Ngozi") || m.recipient === "All Teachers" || m.recipient === "All Parents & Teachers")
                   .map((msg) => (
                     <div key={msg.id} className="bg-white/5 border border-white/5 p-4 rounded-xl text-xs">
                       <div className="flex justify-between items-center mb-2 text-white/40 font-semibold text-[10px]">
