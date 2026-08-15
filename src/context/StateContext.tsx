@@ -176,6 +176,7 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [messages, setMessages] = useState<Message[]>([]);
   const [ptaMeetings, setPtaMeetings] = useState<PtaMeeting[]>([]);
   const [currentUser, setCurrentUser] = useState<{ role: "admin" | "teacher" | "parent" | null; email: string | null; name: string | null }>({ role: null, email: null, name: null });
+  const [authLoading, setAuthLoading] = useState(true);
 
   // Load from local storage
   useEffect(() => {
