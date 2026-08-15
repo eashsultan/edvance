@@ -32,7 +32,7 @@ export default function AdminLogin() {
         email: email,
         name: "Principal Davies",
       });
-      router.push("/dashboard/admin");
+      router.push("/component/admin");
     }, 1000);
   };
 
