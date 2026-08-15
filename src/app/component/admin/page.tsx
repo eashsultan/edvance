@@ -1556,6 +1556,101 @@ export default function AdminPortal() {
           </div>
         </div>
       )}
+
+      {/* 5. Schedule PTA Meeting Modal */}
+      {showAddPta && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50 animate-fadeIn">
+          <div className="bg-white rounded-3xl w-full max-w-md p-6 relative text-xs text-[#334155]">
+            <h3 className="font-bold text-sm text-[#0f172a] mb-4">Schedule PTA Meeting</h3>
+            <form onSubmit={handleCreatePta} className="flex flex-col gap-3">
+              <div>
+                <label className="text-[#64748b] block mb-1 font-bold">Meeting Title</label>
+                <input
+                  type="text"
+                  required
+                  value={newPta.title}
+                  onChange={(e) => setNewPta({ ...newPta, title: e.target.value })}
+                  placeholder="e.g. End of Term Consultations"
+                  className="w-full bg-white border border-[#e2e8f0] rounded-xl p-2.5 text-[#334155] focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="text-[#64748b] block mb-1 font-bold">Meeting Type (Admin Choice)</label>
+                <select
+                  value={newPta.type}
+                  onChange={(e) => setNewPta({ ...newPta, type: e.target.value as any })}
+                  className="w-full bg-white border border-[#e2e8f0] rounded-xl p-2.5 text-[#334155] focus:outline-none font-semibold"
+                >
+                  <option value="Video">Video Call (Google Meet / Jitsi Style)</option>
+                  <option value="Voice">Voice Call Only</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-[#64748b] block mb-1 font-bold">Date & Time</label>
+                <input
+                  type="datetime-local"
+                  required
+                  value={newPta.dateTime}
+                  onChange={(e) => setNewPta({ ...newPta, dateTime: e.target.value })}
+                  className="w-full bg-white border border-[#e2e8f0] rounded-xl p-2.5 text-[#334155] focus:outline-none font-semibold"
+                />
+              </div>
+              <div>
+                <label className="text-[#64748b] block mb-1 font-bold">Description / Agenda</label>
+                <textarea
+                  rows={3}
+                  value={newPta.description}
+                  onChange={(e) => setNewPta({ ...newPta, description: e.target.value })}
+                  placeholder="Agenda points for parents..."
+                  className="w-full bg-white border border-[#e2e8f0] rounded-xl p-2.5 text-[#334155] focus:outline-none"
+                />
+              </div>
+              <div className="flex gap-2 justify-end mt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowAddPta(false)}
+                  className="bg-white border border-[#cbd5e1] text-[#334155] font-bold px-4 py-2 rounded-xl cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-xl cursor-pointer">
+                  Schedule Meeting
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 6. Active Live Virtual Meeting (Jitsi embed) Fullscreen Window */}
+      {activeMeeting && (
+        <div className="fixed inset-0 bg-[#0f172a] z-50 flex flex-col">
+          <header className="bg-slate-900 border-b border-white/10 px-6 py-4 flex justify-between items-center text-white">
+            <div>
+              <h3 className="font-bold text-sm">{activeMeeting.title}</h3>
+              <p className="text-[10px] text-white/50">
+                Live {activeMeeting.type === "Video" ? "Video Conference" : "Voice Call Only"}
+              </p>
+            </div>
+            <button
+              onClick={() => setActiveMeeting(null)}
+              className="bg-red-600 hover:bg-red-700 text-white font-bold text-xs px-4 py-2 rounded-xl cursor-pointer transition"
+            >
+              Leave Call
+            </button>
+          </header>
+
+          <div className="flex-1 bg-[#1e293b] relative">
+            <iframe
+              src={`${activeMeeting.meetingUrl}${
+                activeMeeting.type === "Voice" ? "#config.startWithVideoMuted=true" : ""
+              }`}
+              allow="camera; microphone; display-capture; autoplay"
+              className="absolute inset-0 w-full h-full border-none"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
