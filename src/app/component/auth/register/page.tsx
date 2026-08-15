@@ -42,7 +42,7 @@ export default function RegisterSchool() {
         adminName,
         adminEmail: email,
       });
-      router.push("/dashboard/admin");
+      router.push("/component/admin");
     }, 1200);
   };
 
